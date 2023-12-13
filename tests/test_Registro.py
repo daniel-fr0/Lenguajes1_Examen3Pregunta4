@@ -7,8 +7,9 @@ class TestRegistro(unittest.TestCase):
 		self.assertTrue(registro.definir('A', ['f', 'g']))
 		self.assertTrue(registro.definir('B', ['f', 'h'], 'A'))
 		self.assertTrue(registro.definir('C', ['f', 'i'], 'B'))
-		self.assertFalse(registro.definir('A', ['f', 'g'], 'C'))
-		self.assertFalse(registro.definir('D', ['f', 'j'], 'E'))
+		with self.assertRaises(Exception):
+			registro.definir('A', ['f', 'g'], 'C')
+			registro.definir('D', ['f', 'j'], 'E')
 
 	def test_describir(self):
 		registro = Registro()
@@ -30,4 +31,4 @@ class TestRegistro(unittest.TestCase):
 			'h -> B :: h',
 			'i -> C :: i'
 		])
-		self.assertEqual(registro.describir('D'), None)
+		self.assertRaises(Exception, registro.describir, 'D')
