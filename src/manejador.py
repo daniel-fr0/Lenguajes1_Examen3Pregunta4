@@ -1,3 +1,5 @@
+from src.Registro import Registro
+
 def main():
 	print("-------------------------------------------------------------------------------------")
 	print("Bienvenido al manejador de tablas de métodos virtuales. Este trabaja sobre un sistema")
@@ -11,6 +13,8 @@ def main():
 	print("SALIR - termina la ejecución del manejador")
 	print("-------------------------------------------------------------------------------------\n")
 
+	registro = Registro()
+
 	while True:
 		entrada = input(">>> ").strip().split(" ")
 		entrada = [entrada[0].upper()] + entrada[1:]
@@ -20,13 +24,22 @@ def main():
 				break
 
 			case ["CLASS", tipo, ":", super, *metodos]:
-				print("Se quiere crear una subclase de", super, "de tipo", tipo, "con los métodos", metodos)
-			
+				try:
+					registro.definir(tipo, metodos, super)
+				except Exception as e:
+					print(e)
+
 			case ["CLASS", tipo, *metodos]:
-				print("Se quiere crear una clase de tipo", tipo, "con los métodos", metodos)
+				try:
+					registro.definir(tipo, metodos)
+				except Exception as e:
+					print(e)
 
 			case ["DESCRIBIR", tipo]:
-				print("Se quiere describir la clase de tipo", tipo)
+				try:
+					print("\n".join(registro.describir(tipo)))
+				except Exception as e:
+					print(e)
 
 			case ["CLASS", *_]:
 				print("Usos del comando CLASS:")
@@ -41,7 +54,7 @@ def main():
 				continue
 			
 			case _:
-				print("Comando no reconocido.")
+				print("Comando no reconocido")
 
 if __name__ == "__main__":
 	main()
