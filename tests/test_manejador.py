@@ -40,6 +40,20 @@ class TestManejador(unittest.TestCase):
 				output = fakeStdout.getvalue().strip().split('\n')
 				self.assertEqual(output[-1], '-------------------------------------------------------------------------------------')
 
+	def test_crear_clase_vacia(self):
+		with patch('builtins.input', side_effect=['class A', 'salir']):
+			with patch('sys.stdout', new_callable=io.StringIO) as fakeStdout:
+				main()
+				output = fakeStdout.getvalue().strip().split('\n')
+				self.assertEqual(output[-1], '-------------------------------------------------------------------------------------')
+	
+	def test_crear_clase_con_super_vacia(self):
+		with patch('builtins.input', side_effect=['class A', 'class B : A', 'salir']):
+			with patch('sys.stdout', new_callable=io.StringIO) as fakeStdout:
+				main()
+				output = fakeStdout.getvalue().strip().split('\n')
+				self.assertEqual(output[-1], '-------------------------------------------------------------------------------------')
+
 	def test_describir_clase(self):
 		commands = [
 			'class A f g',
@@ -69,6 +83,48 @@ class TestManejador(unittest.TestCase):
 			'f -> B :: f',
 			'g -> A :: g',
 			'h -> B :: h'
+		]
+		
+		with patch('builtins.input', side_effect=commands):
+			with patch('sys.stdout', new_callable=io.StringIO) as fakeStdout:
+				main()
+				output = fakeStdout.getvalue().strip().split('\n')
+				for i in range(len(expected)):
+					self.assertEqual(output[i-len(expected)], expected[i])
+
+	def test_describir_clase_vacia(self):
+		commands = [
+			'class A',
+			'class B : A',
+			'describir A',
+			'describir B',
+			'salir'
+		]
+		expected = [
+			'No hay métodos definidos',
+			'No hay métodos definidos'
+		]
+		
+		with patch('builtins.input', side_effect=commands):
+			with patch('sys.stdout', new_callable=io.StringIO) as fakeStdout:
+				main()
+				output = fakeStdout.getvalue().strip().split('\n')
+				for i in range(len(expected)):
+					self.assertEqual(output[i-len(expected)], expected[i])
+
+	def test_describir_clase_vacia_con_super(self):
+		commands = [
+			'class A f g',
+			'class B : A',
+			'describir A',
+			'describir B',
+			'salir'
+		]
+		expected = [
+			'f -> A :: f',
+			'g -> A :: g',
+			'f -> A :: f',
+			'g -> A :: g',
 		]
 		
 		with patch('builtins.input', side_effect=commands):

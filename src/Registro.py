@@ -19,4 +19,7 @@ class Registro():
 	def describir(self, tipo):
 		if tipo not in self.clases:
 			raise Exception("Clase no definida")
-		return self.clases[tipo].descripcion()
+		desc = self.clases[tipo].descripcion()
+		if len(desc) == 0:
+			return ["No hay métodos definidos"]
+		return desc

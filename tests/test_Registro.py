@@ -16,6 +16,8 @@ class TestRegistro(unittest.TestCase):
 		registro.definir('A', ['f', 'g'])
 		registro.definir('B', ['f', 'h'], 'A')
 		registro.definir('C', ['f', 'i'], 'B')
+		registro.definir('D', [], 'C')
+		registro.definir('E', [])
 		self.assertEqual(registro.describir('A'), [
 			'f -> A :: f',
 			'g -> A :: g'
@@ -31,4 +33,13 @@ class TestRegistro(unittest.TestCase):
 			'h -> B :: h',
 			'i -> C :: i'
 		])
-		self.assertRaises(Exception, registro.describir, 'D')
+		self.assertEqual(registro.describir('D'), [
+			'f -> C :: f',
+			'g -> A :: g',
+			'h -> B :: h',
+			'i -> C :: i'
+		])
+		self.assertEqual(registro.describir('E'), [
+			'No hay métodos definidos'
+		])
+		self.assertRaises(Exception, registro.describir, 'F')
